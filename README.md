@@ -1,7 +1,7 @@
 # literature_review_scripts
 Python scripts used to extract pdfs from pubmed and to extract and analyze text 
 
-PubmedScraper.py:
+* PubmedScraper.py:
 
 Purpose of this script:
 
@@ -9,4 +9,14 @@ Allows users to define keywords (along with a given timeframe) for their Pubmed 
 
 Required input:
 
-User defined keywords and date ranges
+User defined keywords and date ranges. Can be used in the terminal or in a python IDE
+
+* Extract_key_sentences_from_scientific_pdf.py
+
+Purpose of this script:
+
+Allows users to download pdfs (based on dois) from scihub and to subsequently identify specific sentences that contain keywords of interest.
+
+Required input:
+
+.csv or .txt with DOIs, title, author, and year of papers of interest. Can be used in a python IDE
