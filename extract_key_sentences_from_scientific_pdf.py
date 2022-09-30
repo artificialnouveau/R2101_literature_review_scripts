@@ -184,8 +184,8 @@ find_sentence_one_text(pdf_df.iloc[0]['text'],'tremor')
 find_sentence_one_text(pdf_df.iloc[0]['text'],'classification')
 
 
-machine_learning_list = ['random forest','regression','linear regression','logistic regression','neural network']
+# create a list of keywords that you are interested in (all lower case)
+keywords_list = ['random forest','regression','linear regression','logistic regression','neural network']
 
-# use this if you want to parse the text from all papers
-pdf_df['temp'] = pdf_df['text'].apply(lambda x : extract_key_sentences(str(x),machine_learning_list))
+pdf_df['temp'] = pdf_df['text'].apply(lambda x : extract_key_sentences(str(x),keywords_list))
 print_lines(pdf_df,'temp')
