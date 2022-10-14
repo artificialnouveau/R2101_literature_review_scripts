@@ -31,10 +31,6 @@ import calendar
 
 #inspiration for code from https://github.com/PhilippeCodes/Web-Scraping-PubMed/blob/master/Scrape_PubMed.py
 
-#create pre-defined keyword lists and functions
-list_of_pop=['Human',"Adult","People","Monkey","Primate","Pig","In vitro","Hens", "Child","Mice","Rat","Chicken","Women","Men","Patients"]
-
-
 def unique_list(l):
     ulist = []
     [ulist.append(x) for x in l if x not in ulist]
@@ -245,6 +241,8 @@ def simpletldf(text):
             summary += " " + sentence
     print(summary)
 
+#create pre-defined keyword lists and functions
+list_of_pop=['Human',"Adult","People","Monkey","Primate","Pig","In vitro","Hens", "Child","Mice","Rat","Chicken","Women","Men","Patients"]
 
 
 #Get user input
