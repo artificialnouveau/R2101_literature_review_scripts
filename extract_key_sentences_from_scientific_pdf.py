@@ -28,7 +28,6 @@ pd.set_option('display.max_rows', None)
 # User input required! 
 # Provide a csv/text file that contains two columns a title (of the article name) and the doi
 # For optimal results include Author and Year
-os.chdir('C:/Users/AZhuparris/Documents/LiteratureReview/')
 pdf_df= pd.read_csv('./test.csv')
 
 #the title of the articles will become the filename of your pdfs. this step removes any punctuation and lowers the cases of your title
