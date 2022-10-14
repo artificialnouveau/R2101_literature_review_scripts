@@ -9,15 +9,6 @@ Created on Mon Sep 19 17:10:18 2022
 #Allows users to define keywords (along with a given timeframe) for their Pubmed search. The script returns a pandas dataframe and csv file with the following information: 'authors', 'ArticleTitle', 'journal_title', 'volume', 'date', 'pubmed', 'doi_pii_str', 'abstract','population'*, 'symptoms'*, 'bacteria'.* Users can also add a custom column(s) as well.
 #Note that * columns return a limited number of search terms. 
 
-
-#import libraries
-
-
-#Purpose of this script:
-#Allows users to define keywords (along with a given timeframe) for their Pubmed search. The script returns a pandas dataframe and csv file with the following information: 'authors', 'ArticleTitle', 'journal_title', 'volume', 'date', 'pubmed', 'doi_pii_str', 'abstract','population'*, 'symptoms'*, 'bacteria'.* Users can also add a custom column(s) as well.
-#Note that * columns return a limited number of search terms. 
-
-
 #import libraries
 
 import numpy as np
@@ -378,14 +369,10 @@ else:
 
 file_name = keywords + '_' + str(num_results) + '.csv'
 print("Filename",file_name)
-df.to_csv(file_name)
+df.to_csv(file_name, index=False)
 
 print("Sneak peek:")
 print(df.head())
-
-
-# In[5]:
-
 
 #Get extra user arguments
 
@@ -424,9 +411,6 @@ else:
         print("Added new column with custom search. ")
         print("Updated the file, new column is called: ",customKeywordSearch)
         df.to_csv(file_name)
-
-
-# In[10]:
 
 
 tldr = str(input("Would you like to a really simple TLDR based on the abstracts of all the papers (Type yes or no)"))
