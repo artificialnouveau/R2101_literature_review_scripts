@@ -1,8 +1,8 @@
-pandas == 1.5\
-numpy == 1.18\
-bs4 == 0.0\
+pandas == 1.5
+numpy == 1.18
+bs4 == 0.0
 re == 3.10\
-requests == 2.28\
-nltk == 3.7\
-urllib == 1.26\
-ssl == 1.16}
+requests == 2.28
+nltk == 3.7
+urllib == 1.26
+ssl == 1.16
