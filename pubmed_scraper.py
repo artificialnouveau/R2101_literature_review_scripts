@@ -12,6 +12,14 @@ Created on Mon Sep 19 17:10:18 2022
 
 #import libraries
 
+
+#Purpose of this script:
+#Allows users to define keywords (along with a given timeframe) for their Pubmed search. The script returns a pandas dataframe and csv file with the following information: 'authors', 'ArticleTitle', 'journal_title', 'volume', 'date', 'pubmed', 'doi_pii_str', 'abstract','population'*, 'symptoms'*, 'bacteria'.* Users can also add a custom column(s) as well.
+#Note that * columns return a limited number of search terms. 
+
+
+#import libraries
+
 import numpy as np
 import pandas as pd
 
@@ -195,6 +203,51 @@ def get_bibliography(soup):
 
     return result
 
+def get_doi(soup):
+    
+    '''
+    Objective: Extracts all bibliography information
+    '''
+    article = soup.find('article')
+    journal = soup.find('journal')
+
+    pubmed = ''
+    if soup.find('articleid'):
+        pubmed = 'PUBMED: '
+        pubmed += soup.find('articleid').text
+        pubmed += '; '
+        doi_pii = article.find_all('elocationid')
+        doi_pii_str = ""
+        if len(doi_pii)>1:
+            if 'doi' in str(doi_pii[0]):
+                doi_pii = doi_pii[0].text
+                doi_pii_str += "DOI "
+                doi_pii_str += doi_pii
+                doi_pii_str += "."
+            elif 'doi' in str(doi_pii[1]):
+                doi_pii = doi_pii[1].text
+                doi_pii_str += "DOI "
+                doi_pii_str += doi_pii
+                doi_pii_str += "."
+        elif len(doi_pii) == 1:
+            if 'doi' in str(doi_pii[0]):
+                doi_pii = doi_pii[0].text
+                doi_pii_str += "DOI "
+                doi_pii_str += doi_pii
+                doi_pii_str += "."
+            elif 'pii' in str(doi_pii[0]):
+                doi_pii = doi_pii[0].text
+                doi_pii_str += "PII "
+                doi_pii_str += doi_pii
+                doi_pii_str += "."
+    
+    
+    result = []
+    result.append(pubmed)
+    result.append(doi_pii_str)
+
+    return result
+
 def simpletldf(text):
     # Tokenizing the text
     stopWords = set(stopwords.words("english"))
@@ -241,6 +294,7 @@ def simpletldf(text):
             summary += " " + sentence
     print(summary)
 
+
 #create pre-defined keyword lists and functions
 list_of_pop=['Human',"Adult","People","Monkey","Primate","Pig","In vitro","Hens", "Child","Mice","Rat","Chicken","Women","Men","Patients"]
 
@@ -251,17 +305,21 @@ list_of_pop=['Human',"Adult","People","Monkey","Primate","Pig","In vitro","Hens"
 keywords = str(input('Please enter the keywords (replace spaces with +) '))
 
 #Limit the number of results returned
-numResults = int(input('Please enter the number of results '))
+num_results = int(input('Please enter the number of results '))
 
 #add minimum and maximum search dates
 MIN_DATE=str(input('Minimum Date (YYYY/MM/DD)'))
 MAX_DATE=str(input('Maximum Date (YYYY/MM/DD)'))
 
+#what level of detail:
+
+doi_only = str(input('Do you only want the DOI or do you want the paper information? If doi only, input "yes" otherwise "more"'))
+
 
 #clean up elements in search url
 #url="https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=NUM&sort=relevance&term=KEYWORDS"
 url="https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=NUM&sort=relevance&term=KEYWORDS&MIN_DATE=MIN_DATE&MAX_DATE=MAX_DATE"
-url = url.replace('NUM', str(numResults))
+url = url.replace('NUM', str(num_results))
 url = url.replace('KEYWORDS', keywords)
 url = url.replace('MIN_DATE', MIN_DATE)
 url = url.replace('MAX_DATE', MAX_DATE)
@@ -301,17 +359,24 @@ for link in idlist:
     
     r = requests.get(url)
     soup = BeautifulSoup(r.content, "html.parser")
-    article = get_bibliography(soup)
+    if doi_only == "yes":
+        article = get_doi(soup)
+    else:    
+        article = get_bibliography(soup)
     articles_list.append(article)
     print('Pubmed ID: ',link)
 print('Done!')
 
 #Put scraped information into a dataframe and save as a csv
-df = pd.DataFrame(articles_list)
-df.columns = ['authors', 'articletitle', 'journal', 'volume', 'date', 'pubmedID', 'doi', 'abstract']
-df['Population']= df['abstract'].apply(subpop)
+if doi_only == "yes":
+    df = pd.DataFrame(articles_list)
+    df.columns = ['pubmedID', 'doi']
+else:
+    df = pd.DataFrame(articles_list)
+    df.columns = ['authors', 'articletitle', 'journal', 'volume', 'date', 'pubmedID', 'doi', 'abstract']
+    df['Population']= df['abstract'].apply(subpop)
 
-file_name = keywords + '_' + str(numResults) + '.csv'
+file_name = keywords + '_' + str(num_results) + '.csv'
 print("Filename",file_name)
 df.to_csv(file_name)
 
