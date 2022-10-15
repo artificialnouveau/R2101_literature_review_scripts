@@ -102,108 +102,127 @@ def get_bibliography(soup):
                     authors += ', '
             authors += ", "
     except:
-        pass
+        authors = 'not found'
+    
+    try:
+        article_title = ''
+        if article.find('articletitle'):
+            article_title = '"'
+            title_str = article.find('articletitle').text
+            title_str = strip_brackets(title_str)
+            article_title += title_str
+            if article_title[-1] == '.':
+                article_title += '", '
+            else:
+                article_title += '," '
+    except:
+        article_title = 'not found'
+    
+    try:
+        volume = ''
+        if journal.find('volume'):
+            volume = journal.find('volume').text
+            if soup.find('issue'):
+                volume += '('
+                volume += soup.find('issue').text
+                volume += ')'
+            volume += ' '
+    except:
+        volume = 'not found'
+        
+    try:
+        page = ''
+        if article.find('pagination'):
+            if '-' in article.find('pagination').text:
+                page = 'pp. '
+                page_str = article.find('pagination').text
+                page_str = page_str.strip('\n')
+                page += page_str
+                page += ' '
+            else:
+                page = 'p. '
+                page_str = article.find('pagination').text
+                page_str = page_str.strip('\n')
+                page += page_str
+                page += ' '
+    except:
+        page = 'not found'
+    
+    try:
+        journal_title = ''
+        if journal.find('title'):
+            journal_title = journal.find('title').text
+            journal_title += ' '
 
-    ArticleTitle = ''
-    if article.find('articletitle'):
-        ArticleTitle = '"'
-        title_str = article.find('articletitle').text
-        title_str = strip_brackets(title_str)
-        ArticleTitle += title_str
-        if ArticleTitle[-1] == '.':
-            ArticleTitle += '", '
+        JournalIssue = journal.find('journalissue')
+
+        month = JournalIssue.find('month')
+        date = ''
+        if month:
+            month = JournalIssue.find('month').text
+            if len(month) < 3:
+                month_int = int(str(month))
+                month = calendar.month_abbr[month_int]
+
+            year = JournalIssue.find('year').text
+            date = '('
+            date += month
+            date += '. '
+            date += year
+            date += '). '
+        elif JournalIssue.find('year'):
+            date = '('
+            date += JournalIssue.find('year').text
+            date += '). '
         else:
-            ArticleTitle += '," '
-
-    volume = ''
-    if journal.find('volume'):
-        volume = journal.find('volume').text
-        if soup.find('issue'):
-            volume += '('
-            volume += soup.find('issue').text
-            volume += ')'
-        volume += ' '
-
-    page = ''
-    if article.find('pagination'):
-        if '-' in article.find('pagination').text:
-            page = 'pp. '
-            page_str = article.find('pagination').text
-            page_str = page_str.strip('\n')
-            page += page_str
-            page += ' '
-        else:
-            page = 'p. '
-            page_str = article.find('pagination').text
-            page_str = page_str.strip('\n')
-            page += page_str
-            page += ' '
-
-    journal_title = ''
-    if journal.find('title'):
-        journal_title = journal.find('title').text
-        journal_title += ' '
-
-    JournalIssue = journal.find('journalissue')
-
-    month = JournalIssue.find('month')
-    date = ''
-    if month:
-        month = JournalIssue.find('month').text
-        if len(month) < 3:
-            month_int = int(str(month))
-            month = calendar.month_abbr[month_int]
-
-        year = JournalIssue.find('year').text
-        date = '('
-        date += month
-        date += '. '
-        date += year
-        date += '). '
-    elif JournalIssue.find('year'):
-        date = '('
-        date += JournalIssue.find('year').text
-        date += '). '
-    else:
-        ''
-
-    pubmed = ''
-    if soup.find('articleid'):
-        pubmed = 'PUBMED: '
-        pubmed += soup.find('articleid').text
-        pubmed += '; '
-        doi_pii = article.find_all('elocationid')
-        doi_pii_str = ""
-        if len(doi_pii) > 1:
-            if 'doi' in str(doi_pii[0]):
-                doi_pii = doi_pii[0].text
-                doi_pii_str += "DOI "
-                doi_pii_str += doi_pii
-                doi_pii_str += "."
-            elif 'doi' in str(doi_pii[1]):
-                doi_pii = doi_pii[1].text
-                doi_pii_str += "DOI "
-                doi_pii_str += doi_pii
-                doi_pii_str += "."
-        elif len(doi_pii) == 1:
-            if 'doi' in str(doi_pii[0]):
-                doi_pii = doi_pii[0].text
-                doi_pii_str += "DOI "
-                doi_pii_str += doi_pii
-                doi_pii_str += "."
-            elif 'pii' in str(doi_pii[0]):
-                doi_pii = doi_pii[0].text
-                doi_pii_str += "PII "
-                doi_pii_str += doi_pii
-                doi_pii_str += "."
-
-    abstract = ''
-    if article.find('abstracttext'):
-        abstract = article.find('abstracttext').text
+            ''
+    except:
+        date = 'not found'
+    
+    try:
+        pubmed = ''
+        if soup.find('articleid'):
+            pubmed = 'PUBMED: '
+            pubmed += soup.find('articleid').text
+            pubmed += '; '
+            doi_pii = article.find_all('elocationid')
+            doi_pii_str = ""
+            if len(doi_pii) > 1:
+                if 'doi' in str(doi_pii[0]):
+                    doi_pii = doi_pii[0].text
+                    doi_pii_str += "DOI "
+                    doi_pii_str += doi_pii
+                    doi_pii_str += "."
+                elif 'doi' in str(doi_pii[1]):
+                    doi_pii = doi_pii[1].text
+                    doi_pii_str += "DOI "
+                    doi_pii_str += doi_pii
+                    doi_pii_str += "."
+            elif len(doi_pii) == 1:
+                if 'doi' in str(doi_pii[0]):
+                    doi_pii = doi_pii[0].text
+                    doi_pii_str += "DOI "
+                    doi_pii_str += doi_pii
+                    doi_pii_str += "."
+                elif 'pii' in str(doi_pii[0]):
+                    doi_pii = doi_pii[0].text
+                    doi_pii_str += "PII "
+                    doi_pii_str += doi_pii
+                    doi_pii_str += "."
+    except:
+        doi_pii_str = 'not found'
+    
+    
+    try:
+        abstract = ''
+        if article.find('abstracttext'):
+            abstract = article.find('abstracttext').text
+    except:
+        abstract = 'not found'
 
     result = []
     result.append(authors)
-    result.append(ArticleTitle)
+    result.append(article_title)
     result.append(journal_title)
     result.append(volume)
     result.append(date)
