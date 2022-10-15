@@ -29,6 +29,7 @@ pd.set_option('display.max_rows', None)
 # Provide a csv/text file that contains two columns a title (of the article name) and the doi
 # For optimal results include Author and Year
 pdf_df= pd.read_csv('./test.csv')
+pdf_df.columns = pdf_df.columns.str.lower()
 
 #the title of the articles will become the filename of your pdfs. this step removes any punctuation and lowers the cases of your title
 pdf_df['title'] = pdf_df['title'].apply(lambda x:re.sub(r'[^\w\s]','',x.rstrip().lstrip()))
