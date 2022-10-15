@@ -1,23 +1,7 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[11]:
-
-
-# -*- coding: utf-8 -*-
 """
 Created on Mon Sep 19 17:10:18 2022
 @author: AZhuparris
 """
-
-#%%
-# Purpose of this script:
-# Allows users to define keywords (along with a given timeframe) for their Pubmed search. The script returns a pandas dataframe and csv file with the following information: 'authors', 'ArticleTitle', 'journal_title', 'volume', 'date', 'pubmed', 'doi_pii_str', 'abstract','population'*, 'symptoms'*, 'bacteria'.* Users can also add a custom column(s) as well.
-# Note that * columns return a limited number of search terms.
-
-
-#import libraries
-
 
 # Purpose of this script:
 # Allows users to define keywords (along with a given timeframe) for their Pubmed search. The script returns a pandas dataframe and csv file with the following information: 'authors', 'ArticleTitle', 'journal_title', 'volume', 'date', 'pubmed', 'doi_pii_str', 'abstract','population'*, 'symptoms'*, 'bacteria'.* Users can also add a custom column(s) as well.
